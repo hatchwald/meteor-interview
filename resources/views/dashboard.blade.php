@@ -12,7 +12,6 @@
                     You're logged in!
                     <p class="py-3">
                         <button class="btn btn-primary" id="create_product">Create New Product</button>
-                        <button class="btn btn-secondary" id="test_toast">Toast</button>
                     </p>
                     <table class="table display" id="product_table">
                         <thead>

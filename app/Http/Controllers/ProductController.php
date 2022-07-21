@@ -127,6 +127,21 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        //
+        try {
+            $product->delete();
+            $response = [
+                'message' => 'Success Delete data',
+                'data' => $product,
+                'code' => 200
+            ];
+            return response()->json($response, 200);
+        } catch (\Throwable $th) {
+            $response = [
+                'message' => $th->getMessage(),
+                'data' => $product,
+                'code' => $th->getCode()
+            ];
+            return response()->json($response, 500);
+        }
     }
 }

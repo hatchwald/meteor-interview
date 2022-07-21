@@ -17,7 +17,7 @@ $(function () {
             {
                 data: '',
                 render: function (data, type, row) {
-                    return `<button class='btn btn-warning btn-update' data-ids='${row.id}'>Update</button> <button class='btn btn-danger btn-delete'>Delete</button>`
+                    return `<button class='btn btn-warning btn-update' data-ids='${row.id}'>Update</button> <button class='btn btn-danger btn-delete' data-ids='${row.id}'>Delete</button>`
                 }
             }
         ]
@@ -54,7 +54,7 @@ $(function () {
         console.log("submitted", all_data)
     })
 
-    $("#product_table").click(".btn-update", function (e) {
+    $("#product_table").on("click", ".btn-update", function (e) {
         const data_ids = $(e.target).data("ids")
         $.ajax({
             url: `/products/${data_ids}`,
@@ -76,7 +76,7 @@ $(function () {
         e.preventDefault()
         const all_data = $(this).serializeArray()
         $("#modalUpdate").modal("hide")
-        // console.log(all_data);
+        console.log(all_data);
         $.ajax({
             url: `/products/${all_data[2]['value']}`,
             data: all_data,
@@ -95,6 +95,30 @@ $(function () {
                 $("#modalUpdate").modal("show")
             }, 1000);
         })
+    })
+
+    $("#product_table").on("click", ".btn-delete", function (e) {
+        if (confirm("are you sure to delete this data ?")) {
+            const data_ids = $(e.target).data("ids")
+            const token_csrf = $("input[name=_token]").val()
+            const data_array = [{ name: '_token', value: token_csrf }, { name: '_method', value: 'DELETE' }, { name: 'id', value: data_ids }]
+            console.log(data_array)
+            $.ajax({
+                url: `/products/${data_ids}`,
+                type: 'POST',
+                data: data_array
+            }).done(function (data) {
+                $("#toast_success .toast-body").text(data.message)
+                $("#toast_success").toast("show")
+                datatable_data.ajax.reload()
+                console.log(data);
+            }).fail(function (xhr, status, err) {
+                const responsejson = xhr.responseJSON
+                $("#toast_error .toast-body").text(responsejson.message)
+                $("#toast_error").toast("show")
+            })
+
+        }
     })
 
 
