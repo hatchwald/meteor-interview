@@ -23,5 +23,5 @@ Route::get('/dashboard', function () {
 })->middleware(['auth'])->name('dashboard');
 Route::get('/all-products', [ProductController::class, 'getAll'])->middleware(['auth']);
 
-Route::resource('products', ProductController::class)->except('getAll');
+Route::resource('products', ProductController::class)->except('getAll')->middleware(['auth']);
 require __DIR__ . '/auth.php';

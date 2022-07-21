@@ -76,7 +76,7 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
-        //
+        return response()->json($product, 200);
     }
 
     /**
@@ -99,7 +99,24 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
-        //
+        $all_data = $request->all();
+
+        try {
+            $product->update($request->all());
+            $response = [
+                'message' => 'Success Update data',
+                'data' => $product,
+                'code' => 200
+            ];
+            return response()->json($response, 200);
+        } catch (\Throwable $th) {
+            $response = [
+                'message' => $th->getMessage(),
+                'data' => $all_data,
+                'code' => $th->getCode()
+            ];
+            return response()->json($response, 500);
+        }
     }
 
     /**
